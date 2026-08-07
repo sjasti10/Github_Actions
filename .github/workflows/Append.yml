@@ -2,8 +2,9 @@ name: Add Prefix
 
 on:
   push:
-  branches:
-      - master
+    branches: [ master ]
+permissions:
+  contents: write
 
 jobs:
   rename-files:
