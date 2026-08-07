@@ -2,6 +2,8 @@ name: Add Prefix
 
 on:
   push:
+  branches:
+      - master
 
 jobs:
   rename-files:
