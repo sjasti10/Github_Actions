@@ -3,7 +3,7 @@ name: Process Files
 on:
   push:
     branches:
-      - master
+      - main
 
 jobs:
   process-files:
