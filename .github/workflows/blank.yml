@@ -9,10 +9,39 @@ jobs:
   process-files:
     runs-on: ubuntu-latest
 
+    permissions:
+      contents: write
+
     steps:
-      - name: Checkout
+      - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Run Composite Action
-        uses: ./.github/actions/file-processing
-        
+      - name: Process Files
+        run: |
+          DATE=$(date +%Y%m%d)
+
+          for FILE in *.txt; do
+            [ -f "$FILE" ] || continue
+
+            BASENAME="${FILE%.txt}"
+
+            NEW_TXT="${BASENAME}_${DATE}.txt"
+            mv "$FILE" "$NEW_TXT"
+
+            CSV_FILE="${BASENAME}_${DATE}.csv"
+            sed 's/[[:space:]][[:space:]]*/,/g' "$NEW_TXT" > "$CSV_FILE"
+
+            echo "Created $NEW_TXT"
+            echo "Created $CSV_FILE"
+          done
+
+      - name: Commit Changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          git add .
+
+          git diff --staged --quiet || git commit -m "Rename txt files and generate csv files"
+
+          git push
