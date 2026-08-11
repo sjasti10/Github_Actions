@@ -1,0 +1,28 @@
+name: File Processing
+description: Append date to file name and convert TXT to CSV
+
+runs:
+  using: composite
+  steps:
+    - name: Append date to filename
+      shell: bash
+      run: |
+        DATE=$(date +%Y%m%d)
+
+        for FILE in $(find . -name "*.txt"); do
+          BASENAME=$(basename "$FILE" .txt)
+          cp "$FILE" "${BASENAME}_${DATE}.txt"
+        done
+
+    - name: Convert TXT to CSV
+      shell: bash
+      run: |
+        DATE=$(date +%Y%m%d)
+
+        for FILE in *_${DATE}.txt; do
+          CSV_FILE="${FILE%.txt}.csv"
+          sed 's/[[:space:]][[:space:]]*/,/g' "$FILE" > "$CSV_FILE"
+
+          echo "Created $CSV_FILE"
+        done
+`
