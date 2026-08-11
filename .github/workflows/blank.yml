@@ -1,0 +1,17 @@
+name: Process Files
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  process-files:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run Composite Action
+        uses: ./.github/actions/file-processing
